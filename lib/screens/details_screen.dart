@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:peliculas_20233/widgets/casting_cards.dart';
+
+import '../models/models.dart';
 
 class DetailsScreen extends StatelessWidget {
   const DetailsScreen({super.key});
@@ -6,9 +9,8 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //Recibir argumentos de otra pantalla
-    final String movie =
-        ModalRoute.of(context)?.settings.arguments.toString() ?? 'Sin nombre';
-    return const Scaffold(
+    final Movie movie = ModalRoute.of(context)?.settings.arguments as Movie;
+    return Scaffold(
       body: CustomScrollView(
         //Widget con comportamientos predefinidos al scroll
         slivers: [
@@ -16,8 +18,9 @@ class DetailsScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate.fixed(
               [
-                _PosterAndTitle(),
+                _PosterAndTitle(movie: movie),
                 _Overview(),
+                CastingCards(movieId: movie.id)
               ],
             ),
           )
@@ -61,7 +64,8 @@ class _CustomAppBar extends StatelessWidget {
 }
 
 class _PosterAndTitle extends StatelessWidget {
-  const _PosterAndTitle({super.key});
+  final Movie movie;
+  const _PosterAndTitle({super.key, required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +78,7 @@ class _PosterAndTitle extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
             child: FadeInImage(
               placeholder: AssetImage('assets/no-image.jpg'),
-              image: AssetImage('assets/no-image.jpg'),
+              image: NetworkImage(movie.fullPosterImg),
               height: 250,
             ),
           ),
